@@ -14,11 +14,11 @@ datasource db {
 }
 
 model Apartment {
-  id          String   @id @default(uuid())
-  name        String
-  description String?
-  price_per_day       Float
-  size        Int
-  capacity    Int
-  images      String[]
+  id            String   @id @default(uuid())
+  name          String
+  description   String?
+  price_per_day Float
+  size          Int
+  capacity      Int
+  images        String[]
 }
