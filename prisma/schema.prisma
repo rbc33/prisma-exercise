@@ -14,11 +14,22 @@ datasource db {
 }
 
 model Apartment {
-  id            String   @id @default(uuid())
+  id            String     @id @default(uuid())
   name          String
   description   String?
   price_per_day Float
   size          Int
   capacity      Int
   images        String[]
+  bookings      Booking[]
+}
+
+model Booking {
+  id           String   @id @default(uuid())
+  apartment_id String
+  user_id      String
+  start_date   DateTime
+  end_date     DateTime
+
+  Apartment Apartment @relation(fields: [apartment_id], references: [id])
 }
