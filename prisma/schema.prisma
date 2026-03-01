@@ -14,7 +14,7 @@ datasource db {
 }
 
 model Apartment {
-  id            String     @id @default(uuid())
+  id            String    @id @default(uuid())
   name          String
   description   String?
   price_per_day Float
@@ -27,9 +27,16 @@ model Apartment {
 model Booking {
   id           String   @id @default(uuid())
   apartment_id String
-  user_id      String
-  start_date   DateTime
-  end_date     DateTime
+  guest_name   String
+  check_in     DateTime
+  check_out    DateTime
 
   Apartment Apartment @relation(fields: [apartment_id], references: [id])
+}
+
+model User {
+  id       String   @id @default(uuid())
+  email    String   @unique
+  password String
+  name     String
 }

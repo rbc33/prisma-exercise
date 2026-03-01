@@ -1,21 +1,21 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { prisma } from "../../lib/prisma";
 import express, { Router } from "express";
 
 const router = Router();
 
-router.get("/", async (req: Request, res: Response) => {
+router.get("/", async (req: Request, res: Response, next: NextFunction) => {
   try {
     const apartments = await prisma.apartment.findMany({
       include: { bookings: true },
     });
     res.json(apartments);
   } catch (error) {
-    res.status(500).json({ error: "Failed to fetch apartments" });
+    next(error);
   }
 });
 
-router.get("/:id", async (req: Request, res: Response) => {
+router.get("/:id", async (req: Request, res: Response, next: NextFunction) => {
   try {
     const apartment = await prisma.apartment.findUnique({
       where: { id: req.params.id as string },
@@ -28,11 +28,11 @@ router.get("/:id", async (req: Request, res: Response) => {
 
     res.json(apartment);
   } catch (error) {
-    res.status(500).json({ error: "Failed to fetch apartment" });
+    next(error);
   }
 });
 
-router.post("/", async (req: Request, res: Response) => {
+router.post("/", async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { name, description, price_per_day, size, capacity, images } =
       req.body;
@@ -41,11 +41,11 @@ router.post("/", async (req: Request, res: Response) => {
     });
     res.status(201).json(apartment);
   } catch (error) {
-    res.status(500).json({ error: "Failed to create apartment" });
+    next(error);
   }
 });
 
-router.put("/:id", async (req: Request, res: Response) => {
+router.put("/:id", async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { name, description, price_per_day, size, capacity, images } =
       req.body;
@@ -55,18 +55,18 @@ router.put("/:id", async (req: Request, res: Response) => {
     });
     res.json(apartment);
   } catch (error) {
-    res.status(500).json({ error: "Failed to update apartment" });
+    next(error);
   }
 });
 
-router.delete("/:id", async (req: Request, res: Response) => {
+router.delete("/:id", async (req: Request, res: Response, next: NextFunction) => {
   try {
     await prisma.apartment.delete({
       where: { id: req.params.id as string },
     });
     res.status(204).send();
   } catch (error) {
-    res.status(500).json({ error: "Failed to delete apartment" });
+    next(error);
   }
 });
 
