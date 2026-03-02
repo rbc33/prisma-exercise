@@ -61,11 +61,20 @@ router.put("/:id", async (req: Request, res: Response, next: NextFunction) => {
 
 router.delete("/:id", async (req: Request, res: Response, next: NextFunction) => {
   try {
+    const id = req.params.id;
+    
+    if (!id || id === 'undefined') {
+      return res.status(400).json({ error: "Invalid apartment ID" });
+    }
+    
     await prisma.apartment.delete({
-      where: { id: req.params.id as string },
+      where: { id: id as string },
     });
     res.status(204).send();
-  } catch (error) {
+  } catch (error: any) {
+    if (error.code === 'P2025') {
+      return res.status(404).json({ error: "Apartment not found" });
+    }
     next(error);
   }
 });
